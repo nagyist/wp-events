@@ -1,29 +1,26 @@
 <?php
 
 /** Returns TRUE if the current post is an event. */
-function ec3_is_event()
-{
+function ec3_is_event() {
   global $post;
   return( !empty($post->ec3_schedule) );
 }
 
 /** Returns TRUE if $query is an event category query. */
-function ec3_is_event_category_q(&$query)
-{
+function ec3_is_event_category_q(&$query) {
   global $ec3;
   // This bit nabbed from is_category()
-  if($query->is_category)
-  {
+  if($query->is_category) {
     $cat_obj = $query->get_queried_object();
-    if($cat_obj->term_id == $ec3->event_category)
+    if($cat_obj->term_id == $ec3->event_category) {
       return true;
+    }
   }
   return false;
 }
 
 /** Returns TRUE if $ec3->query is an event category query. */
-function ec3_is_event_category()
-{
+function ec3_is_event_category() {
   global $ec3;
   return ec3_is_event_category_q($ec3->query);
 }
@@ -158,8 +155,7 @@ function ec3_get_start_month($d='F Y')
 }
 
 /** Get the end month of the current event. */
-function ec3_get_end_month($d='F Y')
-{
+function ec3_get_end_month($d='F Y') {
   $event = ec3_sensible_end_event();
   if(empty($event))
     return '';
@@ -167,8 +163,7 @@ function ec3_get_end_month($d='F Y')
 }
 
 /** Get the start date of the current event. */
-function ec3_get_start_date($d='')
-{
+function ec3_get_start_date($d='') {
   $event = ec3_sensible_start_event();
   if(empty($event))
     return '';
@@ -177,8 +172,7 @@ function ec3_get_start_date($d='')
 }
 
 /** Get the end date of the current event. */
-function ec3_get_end_date($d='')
-{
+function ec3_get_end_date($d='') {
   $event = ec3_sensible_end_event();
   if(empty($event))
     return '';
@@ -192,8 +186,7 @@ function ec3_get_date($d='')  { return ec3_get_start_date( $d); }
 
 
 /** Get the current version of the EC3 plug-in. */
-function ec3_get_version()
-{
+function ec3_get_version() {
   global $ec3;
   return $ec3->version;
 }
@@ -212,17 +205,13 @@ function ec3_get_version()
  *      }
  *    }
  */
-function ec3_iter_post_events($id=0)
-{
+function ec3_iter_post_events($id=0) {
   global $ec3;
   $post = get_post($id);
   unset($ec3->events);
-  if(!isset($post->ec3_schedule) || empty($post->ec3_schedule))
-  {
+  if(!isset($post->ec3_schedule) || empty($post->ec3_schedule)) {
     $ec3->events       = false;
-  }
-  else
-  {
+  } else {
     $ec3->events       = $post->ec3_schedule;
   }
   return new ec3_EventIterator();
@@ -232,8 +221,7 @@ function ec3_iter_post_events($id=0)
 /** Initialise an event-loop, for ALL events in all posts in a query.
  *  You must explicitly state which query is to be used. If you just want to use
  *  the current query, then use the variant form: ec3_iter_all_events(). */
-function ec3_iter_all_events_q(&$query)
-{
+function ec3_iter_all_events_q(&$query) {
   global $ec3, $post;
   unset($ec3->events);
   $ec3->events = array();
@@ -281,39 +269,37 @@ function ec3_iter_all_events_q(&$query)
       {
         $m=date('Ymd'); // Start with today.
         $fmt='Ymd';
-        if($query->query_vars['year'])
-        {
+        if($query->query_vars['year']) {
           $m=''.zeroise($query->query_vars['year'],4).substr($m,4,2);
           $fmt='Y';
         }
-        if($query->query_vars['monthnum'])
-        {
+        if($query->query_vars['monthnum']) {
           $m=substr($m,0,4).zeroise($query->query_vars['monthnum'],2);
           $fmt='Ym';
         }
-        if($query->query_vars['day'])
-        {
+        if($query->query_vars['day']) {
           $m=substr($m,0,6).zeroise($query->query_vars['day'],2);
           $fmt='Ymd';
         }
       }
 
-      while($query->have_posts())
-      {
+      while($query->have_posts()) {
         $query->the_post();
-        if(!isset($post->ec3_schedule))
+        if(!isset($post->ec3_schedule)) {
           continue;
-        foreach($post->ec3_schedule as $s)
-          if(mysql2date($fmt,$s->end) >= $m && mysql2date($fmt,$s->start) <= $m)
+        }
+        foreach($post->ec3_schedule as $s) {
+          if(mysql2date($fmt,$s->end) >= $m && mysql2date($fmt,$s->start) <= $m) {
             $ec3->events[] = $s;
+          }
+        }
       }
 
   elseif($ec3->is_date_range):
 
       // The query is date-limited, so only emit events that occur
       // within the date range.
-      while($query->have_posts())
-      {
+      while($query->have_posts()) {
         $query->the_post();
         if(!isset($post->ec3_schedule))
           continue;
@@ -330,26 +316,29 @@ function ec3_iter_all_events_q(&$query)
   elseif($ec3->advanced &&( $listing=='E' || $query->is_search )):
 
       // Hide inactive events
-      while($query->have_posts())
-      {
+      while($query->have_posts()) {
         $query->the_post();
-        if(!isset($post->ec3_schedule))
+        if(!isset($post->ec3_schedule)) {
           continue;
-        foreach($post->ec3_schedule as $s)
-          if( $s->end >= $ec3->today )
+        }
+        foreach($post->ec3_schedule as $s) {
+          if( $s->end >= $ec3->today ) {
             $ec3->events[] = $s;
+          }
+        }
       }
 
   else:
 
       // Emit all events (same as the first branch).
-      while($query->have_posts())
-      {
+      while($query->have_posts()) {
         $query->the_post();
-        if(!isset($post->ec3_schedule))
+        if(!isset($post->ec3_schedule)) {
           continue;
-        foreach($post->ec3_schedule as $s)
+        }
+        foreach($post->ec3_schedule as $s) {
           $ec3->events[] = $s;
+        }
       }
 
   endif;
@@ -493,37 +482,45 @@ function ec3_get_events(
   //  NUMBER      - limits number of posts
   //  NUMBER days - next NUMBER of days
   $query = new WP_Query();
-  if(preg_match('/^ *([0-9]+) *d(ays?)?/',$limit,$matches))
+  if(preg_match('/^ *([0-9]+) *d(ays?)?/',$limit,$matches)) {
       $query->query( 'ec3_listing=event&ec3_days='.intval($matches[1]) );
-  elseif(intval($limit)>0)
+  } elseif(intval($limit)>0) {
       $query->query( 'ec3_after=today&posts_per_page='.intval($limit) );
-  elseif(intval($limit)<0)
+  } elseif(intval($limit)<0) {
       $query->query( 'ec3_before=today&order=asc&posts_per_page='.abs(intval($limit)) );
-  else
+  } else {
       $query->query( 'ec3_after=today&posts_per_page=5' );
-
-  echo "<ul class='ec3_events'>";
-  echo '<!-- Generated by Event-Calendar v'.ec3_get_version().' -->'."\n";
-
-  if($query->have_posts())
-  {
+  }
+?>
+  <ul class="ec3_events">
+<!-- Generated by WP Events v. <?php echo ec3_get_version(); ?> -->
+<?php
+  if($query->have_posts()) {
     $current_month=false;
     $current_date=false;
     $data=array();
-    for($evt=ec3_iter_all_events_q($query); $evt->valid(); $evt->next())
-    {
+    for($evt=ec3_iter_all_events_q($query); $evt->valid(); $evt->next()) {
       $data['SINCE']=ec3_get_since();
 
       // Month changed?
       $data['MONTH']=ec3_get_month($month_format);
-      if((!$current_month || $current_month!=$data['MONTH']) && $template_month)
-      {
-        if($current_date)
-            echo "</ul></li>\n";
-        if($current_month)
-            echo "</ul></li>\n";
-        echo "<li class='ec3_list ec3_list_month'>"
-        .    ec3_format_str($template_month,$data)."\n<ul>\n";
+      if((!$current_month || $current_month!=$data['MONTH']) && $template_month) {
+        if($current_date) {
+?>
+  </ul>
+</li>
+<?php
+        }
+        if($current_month) {
+?>
+  </ul>
+</li>
+<?php
+        }
+?>
+<li class="ec3_list ec3_list_month"><?php echo ec3_format_str($template_month,$data); ?>
+  <ul>
+<?php
         $current_month=$data['MONTH'];
         $current_date=false;
       }
@@ -532,10 +529,16 @@ function ec3_get_events(
       $data['DATE'] =ec3_get_date($date_format);
       if((!$current_date || $current_date!=$data['DATE']) && $template_day)
       {
-        if($current_date)
-            echo "</ul></li>\n";
-        echo "<li class='ec3_list ec3_list_day'>"
-        .    ec3_format_str($template_day,$data)."\n<ul>\n";
+        if($current_date) {
+?>
+  </ul>
+</li>
+<?php
+        }
+?>
+<li class="ec3_list ec3_list_day"><?php echo ec3_format_str($template_day,$data); ?>
+  <ul>
+<?php
         $current_date=$data['DATE'];
       }
 
@@ -543,63 +546,65 @@ function ec3_get_events(
       $data['TITLE'] =get_the_title();
       $data['LINK']  =get_permalink();
       $data['AUTHOR']=get_the_author();
-      echo " <li>".ec3_format_str($template_event,$data)."</li>\n";
+?>
+  <li><?php echo ec3_format_str($template_event,$data); ?></li>
+<?php
     }
-    if($current_date)
-        echo "</ul></li>\n";
-    if($current_month)
-        echo "</ul></li>\n";
+    if($current_date) {
+?>
+  </ul>
+</li>
+<?php
+    }
+    if($current_month) {
+?>
+  </ul>
+</li>
+<?php
+    }
+  } else {
+?>
+  <li><?php echo __('No events.','ec3'); ?></li>
+<?php
   }
-  else
-  {
-    echo "<li>".__('No events.','ec3')."</li>\n";
-  }
-  echo "</ul>\n";
+?>
+</ul>
+<?php
 }
-
 
 /** Formats the schedule for the current post.
  *  Returns the HTML fragment as a string. */
-function ec3_get_schedule(
-  $format_single =EC3_DEFAULT_FORMAT_SINGLE,
-  $format_range  =EC3_DEFAULT_FORMAT_RANGE,
-  $format_wrapper=EC3_DEFAULT_FORMAT_WRAPPER
-)
-{
-  if(!ec3_is_event())
+function ec3_get_schedule($format_single =EC3_DEFAULT_FORMAT_SINGLE, $format_range  =EC3_DEFAULT_FORMAT_RANGE, $format_wrapper=EC3_DEFAULT_FORMAT_WRAPPER) {
+  if(!ec3_is_event()) {
     return '';
+  }
 
   global $ec3;
   $result='';
   $date_format=get_option('date_format');
   $time_format=get_option('time_format');
   $current=false;
-  for($evt=ec3_iter_post_events(); $evt->valid(); $evt->next())
-  {
+  for($evt=ec3_iter_post_events(); $evt->valid(); $evt->next()) {
     $date_start=ec3_get_start_date();
     $date_end  =ec3_get_end_date();
     $time_start=ec3_get_start_time();
     $time_end  =ec3_get_end_time();
-    if($ec3->event->active)
+    if($ec3->event->active) {
       $active ='';
-    else
+    } else {
       $active ='ec3_past';
+    }
 
-    if($ec3->event->allday)
-    {
-      if($date_start!=$date_end)
-      {
+    if($ec3->event->allday) {
+      if($date_start!=$date_end) {
         $result.=
           sprintf($format_range,$date_start,$date_end,__('to','ec3'),$active);
       }
-      elseif($date_start!=$current)
-      {
+      elseif($date_start!=$current) {
         $current=$date_start;
         $result.=sprintf($format_single,$date_start,$active);
       }
-    }
-    else if($date_start!=$date_end)
-    {
+    } else if($date_start!=$date_end) {
       $current=$date_start;
       $result.=sprintf(
           $format_range,
@@ -608,19 +613,16 @@ function ec3_get_schedule(
           __('to','ec3'),
           $active
         );
-    }
-    else
-    {
-      if($date_start!=$current)
-      {
+    } else {
+      if($date_start!=$current) {
         $current=$date_start;
         $result.=sprintf($format_single,$date_start,$active);
       }
-      if($time_start==$time_end)
+      if($time_start==$time_end) {
         $result.=sprintf($format_single,$time_start,$active);
-      else
-        $result.=
-          sprintf($format_range,$time_start,$time_end,__('to','ec3'),$active);
+      } else {
+        $result.= sprintf($format_range,$time_start,$time_end,__('to','ec3'),$active);
+      }
     }
   }
   return sprintf($format_wrapper,$result);
@@ -629,17 +631,16 @@ function ec3_get_schedule(
 
 /** Formats the schedule for the current post as one or more 'iconlets'.
  *  Returns the HTML fragment as a string. */
-function ec3_get_iconlets()
-{
-  if(!ec3_is_event())
+function ec3_get_iconlets() {
+  if(!ec3_is_event()) {
     return '';
+  }
 
   global $ec3;
   $result='';
   $current=false;
   $this_year=date('Y');
-  for($evt=ec3_iter_post_events(); $evt->valid(); $evt->next())
-  {
+  for($evt=ec3_iter_post_events(); $evt->valid(); $evt->next()) {
     $year_start =ec3_get_start_date('Y');
     $month_start=ec3_get_start_date('M');
     $day_start  =ec3_get_start_date('j');
@@ -648,57 +649,71 @@ function ec3_get_iconlets()
       continue;
     $current=$day_start.$month_start.$year_start;
     // Grey-out past events.
-    if($ec3->event->active)
+    if($ec3->event->active) {
       $active ='';
-    else
+    } else {
       $active =' ec3_past';
+    }
     // Only put the year in if it isn't *this* year.
     if($year_start!=$this_year)
       $month_start.='&nbsp;&rsquo;'.substr($year_start,2);
     // OK, make the iconlet.
-    $result.="<div class='ec3_iconlet$active'><table><tbody>";
-    if(!$ec3->event->allday)
-    {
+    $result.='
+<div class="ec3_iconlet$active">
+  <table>
+    <tbody>';
+    if(!$ec3->event->allday) {
       // Event with start time.
       $time_start=ec3_get_start_time();
-      $result.="<tr class='ec3_month'><td>$month_start</td></tr>"
-             . "<tr class='ec3_day'><td>$day_start</td></tr>"
-             . "<tr class='ec3_time'><td>$time_start</td></tr>";
-    }
-    elseif(substr($ec3->event->start,0,10) == substr($ec3->event->end,0,10))
-    {
+      $result.='
+      <tr class="ec3_month"><td>'.$month_start.' '. $year_start.'</td></tr>
+      <tr class="ec3_day"><td>'.$day_start.'</td></tr>
+      <tr class="ec3_time"><td>'.$time_start.'</td></tr>';
+    } elseif(substr($ec3->event->start,0,10) == substr($ec3->event->end,0,10)) {
       // Single, all-day event.
-      $result.="<tr class='ec3_month'><td>$month_start</td></tr>"
-             . "<tr class='ec3_day'><td>$day_start</td></tr>";
-    }
-    else
-    {
+      $result.='
+      <tr class="ec3_month">'.'<td>'.$month_start.'</td></tr>
+      <tr class="ec3_day"><td>'.$day_start.'</td></tr>';
+    } else {
       // Multi-day event.
+      $year_end =ec3_get_end_date('Y');
       $month_end=ec3_get_end_date('M');
       $day_end  =ec3_get_end_date('j');
-      $result.="<tr class='ec3_month'>"
-             .  "<td class='ec3_multi_start'>$month_start</td>"
-             .  "<td class='ec3_multi_end'>$month_end</td></tr>";
-      $result.="<tr class='ec3_day'>"
-             .  "<td class='ec3_multi_start'>$day_start</td>"
-             .  "<td class='ec3_multi_end'>$day_end</td></tr>";
+      $result.='
+      <tr class="ec3_month">
+        <td class="ec3_multi_start"><span class="year">'.$year_start.'</span> <span class="month">'.$month_start.'</span></td>
+        <td class="ec3_multi_end"><span class="year">'.$year_end.'</span> <span class="month">'.$month_end.'</span></td>
+      </tr>
+      <tr class="ec3_day">
+        <td class="ec3_multi_start">'.$day_start.'</td>
+        <td class="ec3_multi_end">'.$day_end.'</td>
+      </tr>';
     }
-    $result.="</tbody></table></div>\n";
-  }
+    $result.='
+    </tbody>
+  </table>
+</div>';  }
   return apply_filters( 'ec3_filter_iconlets', $result );
 }
 
 
+function wpevents_the_iconlets() { ?>
+<div class="wpevents_iconlets">
+<?php	echo ec3_get_iconlets(); ?>
+</div><!--/.wpevents_iconlets-->
+<?php
+}
+add_shortcode('wpevents_the_iconlets', 'wpevents_the_iconlets');
+
+
 /** Template function, for backwards compatibility.
  *  Call this from your template to insert the Sidebar Event Calendar. */
-function ec3_get_calendar($options = false)
-{
-  if(!ec3_check_installed('Event-Calendar'))
+function ec3_get_calendar($options = false) {
+  if(!ec3_check_installed('Event-Calendar')) {
     return;
+  }
   require_once(dirname(__FILE__).'/calendar-sidebar.php');
   $calobj = new ec3_SidebarCalendar($options);
   echo $calobj->generate();
 }
-
-
 ?>

@@ -18,19 +18,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 
-/** Report an error if EventCalendar not yet installed. */
-function ec3_check_installed($title)
-{
+/** Report an error if WP Events not yet installed. */
+function ec3_check_installed($title) {
   global $ec3;
-  if(!$ec3->event_category)
-  {?>
-    <div style="background-color:black; color:red; border:2px solid red; padding:1em">
-     <div style="font-size:large"><?php echo $title; ?></div>
-     <?php _e('You must choose an event category.','ec3'); ?>
-     <a style="color:red; text-decoration:underline" href="<?php echo
-       get_option('home');?>/wp-admin/options-general.php?page=ec3_admin">
-      <?php _e('Go to Event Calendar Options','ec3'); ?>
-     </a>
+  if(!$ec3->event_category) {?>
+    <div id="wp-events" class="error">
+      <h2><?php echo $title; ?></h2>
+      <p><?php _e('You must choose an event category.','wp-events'); ?><br />
+        <a href="<?php echo get_option('home');?>/wp-admin/options-general.php?page=ec3_admin"><?php _e('Go to WP Events Options','wp-events'); ?></a>
+      </p>
     </div>
    <?php
   }
@@ -63,13 +59,7 @@ define('EC3_DEFAULT_FORMAT_RANGE',
 define('EC3_DEFAULT_FORMAT_WRAPPER','<table class="ec3_schedule">%s</table>');
 
 /** Echos the schedule for the current post. */
-function ec3_the_schedule(
-  $format_single =EC3_DEFAULT_FORMAT_SINGLE,
-  $format_range  =EC3_DEFAULT_FORMAT_RANGE,
-  $format_wrapper=EC3_DEFAULT_FORMAT_WRAPPER
-)
-{
+function ec3_the_schedule($format_single =EC3_DEFAULT_FORMAT_SINGLE, $format_range  =EC3_DEFAULT_FORMAT_RANGE, $format_wrapper=EC3_DEFAULT_FORMAT_WRAPPER) {
   echo ec3_get_schedule($format_single,$format_range,$format_wrapper);
 }
-
 ?>

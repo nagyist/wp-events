@@ -516,7 +516,7 @@ function ec3_filter_redirect_canonical($redirect_url, $requested_url)
 }
 
 
-function ec3_filter_the_content(&$post_content)
+function ec3_filter_the_content($post_content)
 {
   global $ec3;
   switch($ec3->show_event_box)
@@ -530,7 +530,7 @@ function ec3_filter_the_content(&$post_content)
 
 /** Page (not post) content can contain a tag like [EC3BigCalendar:<options>]
  *  which gets replaced by a full-page calendar. */
-function ec3_filter_the_content_bigcal(&$post_content)
+function ec3_filter_the_content_bigcal($post_content)
 {
   if(is_page())
   {

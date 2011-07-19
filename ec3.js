@@ -15,7 +15,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 var ec3 = {
-  version:'3.2.beta2',
+  version:'3.2.beta3',
 
   /** Get today's date.
    *  Note - DO THIS ONCE, so that the value of today never changes! */

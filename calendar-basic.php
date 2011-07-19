@@ -211,15 +211,14 @@ class ec3_BasicCalendar
     }
   }
 
-  function wrap_month($monthstr)
-  {
+  function wrap_month($monthstr) {
     return $this->dateobj->month_name().' '.$this->dateobj->year_num."\n"
            . $monthstr."\n";
   }
   
   function wrap_week($weekstr)
   {
-    return $weekstr."\n";
+    return $weekstr.'\n';
   }
   
   function make_pad($num_days,$is_start_of_month)
