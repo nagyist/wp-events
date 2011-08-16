@@ -1,0 +1,104 @@
+.wpevents_iconlets {
+    clear:both;
+    padding:5px 5px 0 5px;
+    margin-bottom:5px;
+    vertical-align:top;
+    background-color:#EEEEEE;
+}
+.wpevents_iconlet {
+    display:inline-block;
+    margin:0 10px 5px 0;
+    border:2px solid #000;
+    border-radius: 5px;
+    padding:0;
+    background-color:#fff;
+    font-size:1em;
+    line-height:.9em;
+    text-align:center;
+    vertical-align:top;
+}
+.wpevents_iconlet small {
+    font-size:.8em;
+    line-height:.8em;
+}
+
+.wpevents_iconlet .punctuation {
+    display:none;
+}
+
+.wpevents_iconlet.past {
+    opacity:.5;
+}
+
+.wpevents_iconlet .startdate,
+.wpevents_iconlet .enddate {
+    margin:0;
+    padding:0;
+}
+.wpevents_iconlet .startdate .yearmonth,
+.wpevents_iconlet .startdate .day, 
+.wpevents_iconlet .startdate .time,
+.wpevents_iconlet .enddate .yearmonth,
+.wpevents_iconlet .enddate .day, 
+.wpevents_iconlet .enddate .time,
+.wpevents_iconlet .location {
+    display:block;
+    clear:both;
+    padding:3px 5px;
+}
+
+.wpevents_iconlet .startdate .yearmonth, 
+.wpevents_iconlet .enddate .yearmonth {
+    padding-bottom:.3em;
+    background-color:#EEEEEE;
+}
+.wpevents_iconlet .startdate .day,
+.wpevents_iconlet .enddate .day {
+    border-top:2px solid #000;
+    padding-bottom:5px;
+    font-size:3em;
+    line-height:.8em;
+}
+.wpevents_iconlet .startdate .time,
+.wpevents_iconlet .enddate .time,
+.wpevents_iconlet .location {
+    border-top:1px solid #000;
+}
+.wpevents_iconlet .multiday {
+    vertical-align:middle;
+}
+.wpevents_iconlet .multiday .startdate,
+.wpevents_iconlet .multiday .enddate {
+    display:inline-block;
+}
+.wpevents_iconlet .multiday .startdate {
+    border-right:2px solid #000;
+}
+.wpevents_iconlet .multiday .enddate {
+    border-left:2px solid #000;
+}
+.wpevents_iconlet .multiday .arrow {
+    display:inline-block;
+    position:relative;
+    top:-2em;
+    vertical-align:middle;
+}
+.wpevents_iconlet .multiday.allday .arrow {
+    top:-1em;
+}
+
+.wpevents_iconlet tr.ec3_time td {
+ font-size:0.75em;
+ font-weight:normal;
+}
+
+.wpevents_iconlet td.ec3_multi_start {
+ padding-right:0.2ex;
+}
+.wpevents_iconlet td.ec3_multi_end {
+ border-left:solid 1px #800;
+ padding-left:0.2ex;
+}
+div.past td {
+ border-color:gray;
+}

@@ -151,7 +151,7 @@ class ec3_SidebarCalendar extends ec3_BasicCalendar {
   <tfoot>
     <tr>
       <td colspan="7">
-        <img id="'.$ec3spinnerid.'" style="display:none" src="'.$ec3->myfiles.'/ec_load.gif" alt="spinner" />
+        <img id="'.$ec3spinnerid.'" style="display:none" src="'.$ec3->myfiles.'/images/loading.gif" alt="spinner" />
     ';
     // iCalendar link.
     $webcal=get_feed_link('ical');
@@ -160,8 +160,7 @@ class ec3_SidebarCalendar extends ec3_BasicCalendar {
     if(strstr($_SERVER['HTTP_USER_AGENT'],'Mac OS X'))
         $webcal=preg_replace('/^http:/','webcal:',$webcal);
     $nav .= '
-        <a id="'.$ec3publishid.'" href="'.$webcal.'" title="'.__('Subscribe to iCalendar.','ec3').'"><img src="'.$ec3->myfiles.'/publish.gif" alt="iCalendar" /></a>
-      </td>
+        <a id="'.$ec3publishid.'" href="'.$webcal.'" title="'.__('Subscribe to iCalendar.','ec3').'"><img src="'.$ec3->myfiles.'/images/ical-icon_12x12px.gif" alt="iCalendar" /></a>
     ';
     $nav .= '
       </td>
@@ -212,15 +211,15 @@ class ec3_SidebarCalendar extends ec3_BasicCalendar {
     $td_attr = ' id="'.$this->id.'-'.$day_id.'"';
     $td_classes = array();
     if($day_id=='today') {
-      $td_classes[] = 'ec3_today';
+      $td_classes[] = 'today';
     }
     if(!empty($this->dayobj)) {
-      $td_classes[] = 'ec3_postday';
+      $td_classes[] = 'postday';
       $a_attr = ' href="'.$this->dateobj->day_link($this->show_only_events)
        . '" title="'.implode(', ',$dayarr).'"';
       if($this->dayobj->has_events())
       {
-        $td_classes[] = 'ec3_eventday';
+        $td_classes[] = 'eventday';
         $a_attr  .= ' class="eventday"';
       }
       $daystr = "<a$a_attr>" . $this->dateobj->day_num . '</a>';
@@ -236,7 +235,7 @@ class ec3_SidebarCalendar extends ec3_BasicCalendar {
   function make_event(&$event) {
     global $post;
     if($this->dayobj->date == substr($event->start,0,10))
-      return $this->make_post($post) . ' @' . ec3_get_start_time(); // same day
+      return $this->make_post($post) . ' @' . ec3_get_start_datetime(); // same day
     else
       return '...' . $this->make_post($post); // continued from previous day.
   }
@@ -305,7 +304,7 @@ class ec3_SidebarCalendar extends ec3_BasicCalendar {
 
     if(!$this->disable_popups && empty($ec3->done_popups_javascript)) {
       $ec3->done_popups_javascript=true;
-      $result .= '<script type="text/javascript" src="'.$ec3->myfiles.'/popup.js"></script>';
+      $result .= '<script type="text/javascript" src="'.$ec3->myfiles.'/js/popup.js"></script>';
     }
 
     if($this->hide_logo) {
@@ -314,7 +313,7 @@ class ec3_SidebarCalendar extends ec3_BasicCalendar {
       $options='';
     }
 
-    $result .= '<script type="text/javascript"><!--'.'ec3.new_calendar("'.$this->id.'"'.$options.');-></script>';
+    $result .= '<script type="text/javascript"><!--'.'ec3.new_calendar("'.$this->id.'"'.$options.');--></script>';
     return $result;
   }
 };

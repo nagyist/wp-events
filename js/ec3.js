@@ -38,7 +38,7 @@ var ec3 = {
 
       // Pre-load image.
       ec3.imgwait=new Image(14,14);
-      ec3.imgwait.src=ec3.myfiles+'/ec_load.gif';
+      ec3.imgwait.src=ec3.myfiles+'/images/loading.gif';
 
       // Convert strings from PHP into Unicode
       ec3.viewpostsfor=ec3.unencode(ec3.viewpostsfor);

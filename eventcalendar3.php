@@ -1,19 +1,19 @@
 <?php
 /*
-Plugin Name: Event Calendar
-Version: 3.2.beta2
-Plugin URI: http://wpcal.firetree.net
+Plugin Name: WP Events
+Version: 3.2.beta3
+Plugin URI: http://isotype.org/wp-events
 Description: Manage future events as an online calendar. Display upcoming events in a dynamic calendar, on a listings page, or as a list in the sidebar. You can subscribe to the calendar from iCal (OSX) or Sunbird. Change settings on the <a href="options-general.php?page=ec3_admin">Event Calendar Options</a> screen.
-Author: Alex Tingle
-Author URI: http://blog.firetree.net/
+Author: Lorenzo De Tomasi, Alex Tingle
+Author URI: http://isotype.org/author/lorenzodetomasi/
 */
 
 /*
-Copyright (c) 2005-2008, Alex Tingle.
+Copyright (c) 2011 Lorenzo De Tomasi, 2005-2008 Alex Tingle.
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
+as published by the Free Software Foundation; either version 3
 of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
@@ -29,15 +29,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 require_once(dirname(__FILE__).'/options.php');
 require_once(dirname(__FILE__).'/date.php');
 require_once(dirname(__FILE__).'/template-functions.php');
-require_once(dirname(__FILE__).'/template-functions-new.php');
 require_once(dirname(__FILE__).'/admin.php');
 require_once(dirname(__FILE__).'/tz.php');
 require_once(dirname(__FILE__).'/widget-calendar.php');
 require_once(dirname(__FILE__).'/widget-list.php');
 
-
 $ec3_today_id=str_replace('_0','_',ec3_strftime("ec3_%Y_%m_%d"));
-
 
 function ec3_action_init()
 {
@@ -45,12 +42,10 @@ function ec3_action_init()
   add_feed('ec3xml','ec3_do_feed_ec3xml');
 }
 
-
 function ec3_do_feed_ical()
 {
   load_template( dirname(__FILE__).'/feed-ical.php' );
 }
-
 
 function ec3_do_feed_ec3xml()
 {
@@ -132,7 +127,7 @@ function ec3_filter_getarchives_join(&$join)
 
 /** In advanced mode, exclude events from the archive,
  *  Otherwise, disbale EC's normal query filtering, for archive links. */
-function ec3_filter_get_archives_link(&$link_html)
+function ec3_filter_get_archives_link($link_html)
 {
   global $ec3;
   $re='/(<a[^>]* href=[\'"]|<option[^>]* value=[\'"])([^\'"]+)([\'"])/';
@@ -516,13 +511,12 @@ function ec3_filter_redirect_canonical($redirect_url, $requested_url)
 }
 
 
-function ec3_filter_the_content($post_content)
-{
+function ec3_filter_the_content($post_content) {
   global $ec3;
-  switch($ec3->show_event_box)
-  {
+  switch($ec3->show_event_box) {
     case 1:  return ec3_get_schedule() . $post_content;
     case 2:  return ec3_get_iconlets() . $post_content;
+    case 3:  return wpevents_the_iconlets() . $post_content;
     default: return $post_content;
   }
 }

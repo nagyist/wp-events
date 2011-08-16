@@ -125,7 +125,7 @@ class ec3_ec3xml extends ec3_BasicCalendar
     if(!empty($event))
     {
       if($this->dayobj->date == substr($event->start,0,10))
-        $safe_title .= ' @'.ec3_get_start_time();
+        $safe_title .= ' @'.ec3_get_start_datetime();
       else
         $safe_title = '...'.$safe_title;
     }

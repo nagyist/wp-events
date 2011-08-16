@@ -29,3 +29,28 @@
 	border-bottom:solid 4px white;
 	background-color:#f8f8f8;
 }
+#ec3_schedule_editor tr input.add, #ec3_schedule_editor tr input.delete {
+	width:2em;
+}
+#ec3_schedule_editor tr td.date {
+	max-width:11em;
+}	
+#ec3_schedule_editor tr td.date input[type="text"] {
+	margin-right:0;
+	border-radius:3px 0 0 3px;
+	max-width:9em;
+}
+#ec3_schedule_editor button[type="reset"] {
+	margin-left:0;
+	border:1px solid #DFDFDF;
+	border-left:0 none;
+	border-radius:0 3px 3px 0;
+	width:21px;
+	height:21px;
+	background:#fff;
+	cursor: pointer;
+	vertical-align: middle;
+}
+#ec3_schedule_editor button[type="reset"]:hover {
+	background-color:#DFDFDF;
+}

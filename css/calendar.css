@@ -1,0 +1,144 @@
+#wp-calendar table {
+    width:100%;
+}
+#wp-calendar table caption {
+    text-align:center;
+}
+#wp-calendar #prev {
+    text-align:left;
+}
+#wp-calendar #next {
+    text-align:right;
+}
+#wp-calendar a {
+    font-weight:normal;
+}
+#wp-calendar .eventday a {
+ color:#a00;
+}
+
+#wp-calendar table td,
+#wp-calendar table th {
+  text-align:center;
+}
+#wp-calendar table thead th abbr {
+    border-bottom:0 none;
+}
+/*#wp-calendar table td.pad:hover,*/
+#wp-calendar table td,
+#wp-calendar table.nav tr td {
+ border:none;
+}
+#wp-calendar table tbody td {
+    border-top:1px solid #eee;
+    border-left:1px solid #eee;
+    padding:.5em;
+}
+#wp-calendar table tbody td:last-child {
+    border-right:1px solid #eee;
+}
+#wp-calendar table tbody tr:last-child td {
+    border-bottom:1px solid #eee;
+}
+#wp-calendar table td.pad {
+    border:0 none;
+}
+
+#wp-calendar table td:hover {
+    
+}
+#wp-calendar table td.today {
+    background-color:#eee;
+}
+
+/* Big Calendar */
+
+div#ec3_big_cal {
+ border:solid 2px #eee;
+}
+
+#ec3_big_cal table {
+ border-collapse:collapse;
+ width:100%;
+ line-height:normal;
+}
+
+#ec3_big_cal table.nav {
+ width:50%;
+ margin-right:auto;
+ margin-left:auto;
+}
+
+#ec3_big_cal table.nav td {
+ border:none;
+ height:auto;
+ text-align:center;
+ font-size:1.5em;
+ font-weight:bold;
+}
+
+#ec3_big_cal table caption {
+ font-size:1.5em;
+ font-weight:bold;
+}
+
+#ec3_big_cal table th {
+ text-align:center;
+ font-size:smaller;
+ font-weight:normal;
+}
+
+#ec3_big_cal table td {
+ margin:0;
+ padding:0;
+ width:14.2%;
+ vertical-align:top;
+ text-align:left;
+ border:solid 1px #999;
+}
+
+#ec3_big_cal table td.ec3_today {
+ background-color:#ffe;
+}
+
+td .ec3_daynum {
+ display:block;
+ margin:0;
+ margin-left:auto;
+ margin-right:auto;
+ padding:0;
+ padding-right:2px;
+ padding-bottom:1px;
+ text-align:right;
+ font-size:1em;
+}
+
+td.ec3_postday  a.ec3_daynum { color:#0066cc }
+td.ec3_eventday a.ec3_daynum { color:#a00 }
+             span.ec3_daynum { color:black }
+
+td.ec3_postday  a.ec3_daynum:hover { color:white; background-color:#0066cc }
+td.ec3_eventday a.ec3_daynum:hover { color:white; background-color:#a00 }
+
+#ec3_big_cal table td div {
+ min-height:5em;
+}
+
+#ec3_big_cal table td p {
+ font-size:smaller;
+ margin-top:0;
+ margin-bottom:0.1em;
+}
+
+#ec3_big_cal .ec3_post a {
+ color:#0066cc;
+}
+
+#ec3_big_cal .ec3_event a {
+ color:#a00;
+}
+
+#ec3_big_cal .pad {
+ border:none;
+ background-color:#eee;
+}

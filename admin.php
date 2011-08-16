@@ -1,6 +1,6 @@
 <?php
 /*
-Copyright (c) 2005-2008, Alex Tingle.
+Copyright (c) 2011 Lorenzo De Tomasi, 2005-2008 Alex Tingle.
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -20,17 +20,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 /** Utility class used by upgrade_database().
  *  Breaks apart a version string into an array of comparable parts. */
-class ec3_Version
-{
+class ec3_Version {
   var $part; ///< Array of version parts.
 
-  function ec3_Version($str)
-  {
+  function ec3_Version($str) {
     $s=preg_replace('/([-a-z]+)([0-9]+)/','\1.\2',$str);
     $v=explode('.',$s);
     $this->part=array();
-    foreach($v as $i)
-    {
+    foreach($v as $i) {
       if(preg_match('/^[0-9]+$/',$i))
           $this->part[]=intval($i);
       elseif(preg_match('/^dev/',$i))
@@ -51,10 +48,8 @@ class ec3_Version
   }
 
   /** Compares this version with $other. */
-  function cmp($other)
-  {
-    for($i=0; $i < max(count($this->part),count($other->part)); $i++)
-    {
+  function cmp($other) {
+    for($i=0; $i < max(count($this->part),count($other->part)); $i++) {
       // Fill in empty pieces.
       if( !isset($this->part[$i]) )
           $this->part[$i] = 0;
@@ -72,12 +67,8 @@ class ec3_Version
 };
 
 
-class ec3_Admin
-{
-
-
-  function filter_admin_head()
-  {
+class ec3_Admin {
+  function filter_admin_head() {
     global $ec3;
 
     // Turn OFF advanced mode when we're in the admin screens.
@@ -85,13 +76,13 @@ class ec3_Admin
 
     ?>
     <!-- Added by eventcalendar3/admin.php -->
-    <style type='text/css' media='screen'>
-    @import url(<?php echo $ec3->myfiles; ?>/admin.css);
+    <style type="text/css" media="screen">
+    @import url(<?php echo $ec3->myfiles; ?>/css/admin.css);
     </style>
     <!-- These scripts are only needed by edit_form screens. -->
-    <script type='text/javascript' src='<?php echo $ec3->myfiles; ?>/addEvent.js'></script>
-    <script type='text/javascript' src='<?php echo $ec3->myfiles; ?>/edit_form.js'></script>
-    <script type='text/javascript'><!--
+    <script type="text/javascript" src="<?php echo $ec3->myfiles; ?>/js/addEvent.js"></script>
+    <script type="text/javascript" src="<?php echo $ec3->myfiles; ?>/js/edit_form.js"></script>
+    <script type="text/javascript"><!--
     Ec3EditForm.event_cat_id='<?php echo $ec3->wp_in_category.$ec3->event_category; ?>';
     Ec3EditForm.start_of_week=<?php echo intval( get_option('start_of_week') ); ?>;
     // --></script>
@@ -100,7 +91,6 @@ class ec3_Admin
     <script type="text/javascript" src="<?php echo $ec3->myfiles; ?>/js/calendar.js"></script>
     <script type="text/javascript" src="<?php echo $ec3->myfiles; ?>/js/calendar-en.js"></script>
     <script type="text/javascript" src="<?php echo $ec3->myfiles; ?>/js/calendar-setup.js"></script>
-    
     <?php
   }
 
@@ -144,27 +134,32 @@ class ec3_Admin
            DATE_FORMAT(start,'%Y-%m-%d %H:%i') AS start,
            DATE_FORMAT(end,'%Y-%m-%d %H:%i') AS end,
            allday,
-           rpt
+           rpt,
+           location
          FROM $ec3->schedule WHERE post_id=$post_ID ORDER BY start");
     else
       $schedule = false;
 
-    if(function_exists('wp_create_nonce'))
-    {
+    if(function_exists('wp_create_nonce')) {
       echo '<input type="hidden" name="ec3_nonce" id="ec3_nonce" value="' . 
         wp_create_nonce( plugin_basename(__FILE__) ) . '" />';
     }
     ?>
 
     <!-- Event-Calendar: Event Editor -->
+    <p><input type="checkbox" name="ec3_hasmultiplelocations" value="1"<?php if($hasmultiplelocations){ echo ' checked="checked"'; } ?> /><label for=""><?php _e('Enable multiple locations','wpevents'); ?></label></p>
     <table width="100%" cellspacing="2" cellpadding="5" class="editform">
-     <thead><tr>
-      <th><?php _e('Start','ec3'); ?></th>
-      <th><?php _e('End','ec3'); ?></th>
-      <th style="text-align:center"><?php _e('All Day','ec3'); ?></th>
-      <!-- th><?php _e('Repeat','ec3'); ?></th -->
-      <th></th>
-     </tr></thead>
+     <thead>
+      <tr>
+        <th></th>
+        <th><?php _e('Start','ec3'); ?></th>
+        <th><?php _e('End','ec3'); ?></th>
+        <th style="text-align:center"><?php _e('All Day','ec3'); ?></th>
+        <th><?php _e('Repeat','ec3'); ?></th>
+        <th><?php _e('Location','wpevents'); ?></th>
+        <th><?php _e('Registration','wpevents'); ?></th>
+      </tr>
+     </thead>
      <tbody>
     <?php
       $ec3_rows=0;
@@ -172,17 +167,18 @@ class ec3_Admin
       {
         foreach($schedule as $s)
             $this->schedule_row(
-              $s->start,$s->end,$s->sched_id,'update',$s->allday
+              $s->start,$s->end,$s->sched_id,'update',$s->allday,$s->location
             );
         $ec3_rows=count($schedule);
       }
       $default=ec3_strftime('%Y-%m-%d %H:00',3600+time());
-      $this->schedule_row($default,$default,'_','create',False);
+      $this->schedule_row($default,$default,'_','create',False,'');
     ?>
       <tr> 
-       <td colspan="4" style="text-align:left">
-        <p style="margin:0;padding:0;text-align:left">
-         <input type="button" name="ec3_new_row" value=" + "
+       <td colspan="4">
+        <p>
+         <input type="button" name="ec3_new_row" class="add" 
+          value=" + "
           title="<?php _e('Add a new event','ec3'); ?>"
           onclick="Ec3EditForm.add_row()" />
          <input type="hidden" id="ec3_rows" name="ec3_rows"
@@ -197,54 +193,71 @@ class ec3_Admin
   }
 
   /** Utility function called by event_editor_box(). */
-  function schedule_row($start,$end,$sid,$action,$allday)
-  {
+  function schedule_row($start,$end,$sid,$action,$allday,$location) {
+    global $ec3;
     $s="ec3_start_$sid";
     $e="ec3_end_$sid";
     ?>
-      <tr class="ec3_schedule_row" valign="middle"<?php
-       if('create'==$action){ echo ' style="display:none"'; } ?>>
-       <td>
-        <input type="hidden" name="ec3_action_<?php echo $sid;
-         ?>" value="<?php echo $action; ?>" />
-        <input type="text" name="<?php echo $s;
-         if('update'==$action){ echo "\" id=\"$s"; }
-         ?>" value="<?php echo $start; ?>" />
-        <button type="reset" id="trigger_<?php echo $s; ?>">&hellip;</button>
-       </td>
-       <td>
-        <input type="text" name="<?php echo $e;
-         if('update'==$action){ echo "\" id=\"$e"; }
-         ?>" value="<?php echo $end; ?>" />
-        <button type="reset" id="trigger_<?php echo $e; ?>">&hellip;</button>
-       </td>
-       <td style="text-align:center">
-        <input type="checkbox" name="ec3_allday_<?php echo $sid;
-         ?>" value="1"<?php if($allday){ echo ' checked="checked"'; } ?> />
-       </td>
-       <!-- td>
-        <input type="text" name="ec3_repeat_<?php echo $sid; ?>" value="<?php echo $s->rpt; ?>" />
-       </td -->
-       <td>
-        <p style="margin:0;padding:0">
-         <input type="button" name="ec3_del_row_<?php echo $sid;
-          ?>" value=" &mdash; "
-          title="<?php _e('Delete this event','ec3'); ?>"
-          onclick="Ec3EditForm.del_row(this)" />
-        </p>
-       </td>
-      </tr> 
-    <?php
+      <tr class="ec3_schedule_row"<?php if('create'==$action){ echo ' style="display:none"'; } ?>>
+        <td>
+          <p>
+           <input type="button" name="ec3_del_row_<?php echo $sid;?>" class="delete"
+            value="&mdash;"
+            title="<?php _e('Delete this event','ec3'); ?>"
+            onclick="Ec3EditForm.del_row(this)" />
+          </p>
+        </td>
+        <td class="date">
+          <input type="hidden" name="ec3_action_<?php echo $sid;
+           ?>" value="<?php echo $action; ?>" />
+          <input type="text" name="<?php echo $s; if('update'==$action){ echo "\" id=\"$s"; } ?>" value="<?php echo $start; ?>" /><button type="reset" id="trigger_<?php echo $s; ?>"><img src="<?php echo $ec3->myfiles; ?>/images/ical-icon_12x12px.gif" alt="…" /></button>
+        </td>
+        <td class="date">
+          <input type="text" name="<?php echo $e; if('update'==$action){ echo "\" id=\"$e"; } ?>" value="<?php echo $end; ?>" /><button type="reset" id="trigger_<?php echo $e; ?>"><img src="<?php echo $ec3->myfiles; ?>/images/ical-icon_12x12px.gif" alt="…" /></button>
+        </td>
+        <td style="text-align:center">
+          <input type="checkbox" name="ec3_allday_<?php echo $sid; ?>" value="1"<?php if($allday){ echo ' checked="checked"'; } ?> />
+        </td>
+        <td>
+          <input type="text" name="ec3_repeat_<?php echo $sid; ?>" value="<?php echo $s->rpt; ?>" />
+        </td>
+<?php
+    if(is_plugin_active('wp-locations/wp-locations.php')) {
+?>
+        <td>
+          <select name="ec3_location_<?php echo $sid; ?>">
+           <option value="false" selected="selected">Select a location</option>
+           <option value="http://cittadellaltraeconomia.it">Citt&agrave; dell'altraeconomia</option>
+           <option value="http://linuxclub.it">Linuxclub</option>
+          </select>
+          <button type="reset" id="trigger_ec3_location_<?php echo $sid; ?>">…</button>
+        </td>
+<?php
+    } else {
+?>
+        <td>
+          <input type="text" name="ec3_location_<?php echo $sid;
+            if('update'==$action){ echo "\" id=\"ec3_location_$s"; }//#verify if this row needs to be deleted
+            ?>" value="<?php echo $location; ?>" />
+          <button type="reset" id="trigger_ec3_location_<?php echo $sid; ?>">…</button>
+        </td>
+<?php
+    }
+?>
+        <td>
+          <input type="checkbox" name="ec3_has_registration_<?php echo $sid; ?>" id="ec3_has_registration_<?php echo $sid; ?>" value="1"<?php if($has_registration){ echo ' checked="checked"'; } ?> title="<?php _e('Enable registration for this event','wpevents'); ?>" />
+          <button type="reset" id="trigger_ec3_registration_<?php echo $sid; ?>">…</button>
+        </td>
+      </tr>
+<?php
   }
 
 
-  function action_save_post($post_ID)
-  {
+  function action_save_post($post_ID) {
     if(!$_POST)
         return;
 
-    if(function_exists('wp_verify_nonce'))
-    {
+    if(function_exists('wp_verify_nonce')) {
       if(!wp_verify_nonce($_POST['ec3_nonce'], plugin_basename(__FILE__) ))
           return;
     }
@@ -271,7 +284,7 @@ class ec3_Admin
 
     // Find all of our parameters
     $sched_entries=array();
-    $fields =array('start','end','allday','rpt');
+    $fields =array('start','end','allday','rpt','location');
     foreach($_POST as $k => $v)
     {
       if(preg_match('/^ec3_(action|'.implode('|',$fields).')_(_?)([0-9]+)$/',$k,$match))
@@ -334,8 +347,7 @@ class ec3_Admin
   }
   
   /** Clear events for the post. */
-  function action_delete_post($post_ID)
-  {
+  function action_delete_post($post_ID) {
     global $ec3,$wpdb;
     $wpdb->query("DELETE FROM $ec3->schedule WHERE post_id=$post_ID");
   }
@@ -347,8 +359,7 @@ class ec3_Admin
 
 
   /** Upgrade the installation, if necessary. */
-  function upgrade_database()
-  {
+  function upgrade_database() {
     global $ec3,$wpdb;
     // Check version - return if no upgrade required.
     $installed_version=get_option('ec3_version');
@@ -366,8 +377,7 @@ class ec3_Admin
       ) . '.';
 
     $tables=$wpdb->get_results('SHOW TABLES',ARRAY_N);
-    if(!$tables)
-    {
+    if(!$tables) {
       die(sprintf(__('Error upgrading database for %s plugin.','ec3'),
           'Event-Calendar'
         ));
@@ -395,6 +405,7 @@ class ec3_Admin
            end      DATETIME,
            allday   BOOL,
            rpt      VARCHAR(64),
+           location VARCHAR(255)
            PRIMARY KEY(sched_id)
          )");
       // Force the special upgrade page if we are coming from v3.0
@@ -427,7 +438,17 @@ class ec3_Admin
         $ec3->set_show_event_box(0);
       update_option('ec3_hide_event_box',false);
     }
-
+    
+   // Sequence column is new in v3.2.dev-03
+    $v32dev03 = new ec3_Version('3.2.dev-03');
+    if( $v0->cmp($v32dev03) < 0 ) {
+      $message .= '<br />'
+        . sprintf(__('Added SEQUENCE column to table %s','ec3'),$ec3->schedule)
+        . '.';
+      $wpdb->query(
+        "ALTER TABLE $ec3->schedule ADD COLUMN location VARCHAR(255)"
+      );
+    }
     // Record the new version number
     update_option('ec3_version',$ec3->version);
 
@@ -531,13 +552,16 @@ class ec3_Admin
         <td>
          <select name="ec3_show_event_box">          
           <option value='0'<?php if($ec3->show_event_box==0) echo " selected='selected'" ?> >
-           <?php _e('Hide Times','ec3'); ?>
+           <?php _e('Hide Times','wpevents'); ?>
           </option>
           <option value='1'<?php if($ec3->show_event_box==1) echo " selected='selected'" ?> >
-           <?php _e('List Times','ec3'); ?>
+           <?php _e('Times as table schedules','wpevents'); ?>
           </option>
           <option value='2'<?php if($ec3->show_event_box==2) echo " selected='selected'" ?> >
-           <?php _e('Show Times as Icons','ec3'); ?>
+           <?php _e('Times as floating icons','wpevents'); ?>
+          </option>
+          <option value='3'<?php if($ec3->show_event_box==3) echo " selected='selected'" ?> >
+           <?php _e('Times as icons in a <code>&lt;div class="wpevents_iconlets"&gt;</code>','wpevents'); ?>
           </option>
          </select>
         </td> 
@@ -607,9 +631,7 @@ function ec3_options_subpanel()
 
   $ec3_admin->upgrade_database(); // May set option ec3_force_upgrade
 
-  if( intval(get_option('ec3_upgrade_posts')) ||
-      isset($_POST['ec3_upgrade_posts']) )
-  {
+  if( intval(get_option('ec3_upgrade_posts')) || isset($_POST['ec3_upgrade_posts']) ) {
     require_once(dirname(__FILE__).'/upgrade-posts.php');
     ec3_upgrade_posts();
     return;

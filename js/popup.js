@@ -12,9 +12,9 @@ function ec3_Popup()
     ec3.imgShadow0=new Image(8,32);
     ec3.imgShadow1=new Image(500,16);
     ec3.imgShadow2=new Image(8,32);
-    ec3.imgShadow0.src=ec3.myfiles+'/shadow0.png';
-    ec3.imgShadow1.src=ec3.myfiles+'/shadow1.png';
-    ec3.imgShadow2.src=ec3.myfiles+'/shadow2.png';
+    ec3.imgShadow0.src=ec3.myfiles+'/images/shadow0.png';
+    ec3.imgShadow1.src=ec3.myfiles+'/images/shadow1.png';
+    ec3.imgShadow2.src=ec3.myfiles+'/images/shadow2.png';
 
     // Generate the popup (but keep it hidden).
     var table,tbody,tr,td;

@@ -2,17 +2,13 @@
 
 /** Only include this file if a database upgrade is called for.
  *  Otherwise it can be safely ignored. */
-function ec3_upgrade_posts()
-{
-  if(!function_exists('__ngettext'))
-  {
-    function __ngettext($single,$plural,$number,$domain='default')
-    {
+function ec3_upgrade_posts() {
+  if(!function_exists('__ngettext')) {
+    function __ngettext($single,$plural,$number,$domain='default') {
       if($number==1) return __($single,$domain);
       else           return __($plural,$domain);
     }
   }
-
 
   global $ec3,$post,$wpdb;
   $ec3->advanced=false;
@@ -184,8 +180,8 @@ function ec3_upgrade_posts_apply()
       continue;
     // Create a schedule record.
     $wpdb->query(
-      "INSERT INTO $ec3->schedule (post_id,start,end,allday,rpt)
-       VALUES ($pid,$eventdate,$eventdate,0,'')"
+      "INSERT INTO $ec3->schedule (post_id,start,end,allday,rpt,location)
+       VALUES ($pid,$eventdate,$eventdate,0,'','')"
     );
     // Modify the post date.
     $wpdb->query(

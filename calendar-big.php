@@ -66,16 +66,16 @@ class ec3_BigCalendar extends ec3_SidebarCalendar
   {
     if($this->dayobj->date == substr($event->start,0,10))
     {
-      $title = ec3_get_start_time(); // same day
+      $title = ec3_get_start_datetime(); // same day
       if($this->dayobj->date == substr($event->end,0,10))
-        $title .= ' - ' . ec3_get_end_time();
+        $title .= ' - ' . ec3_get_end_datetime();
       else
         $title .= '...';
     }
     else
     {
       if($this->dayobj->date == substr($event->end,0,10))
-        $title = '...' . ec3_get_end_time();
+        $title = '...' . ec3_get_end_datetime();
       else
         $title .= '...'.__('all day','ec3').'...';
     }
@@ -101,7 +101,7 @@ class ec3_BigCalendar extends ec3_SidebarCalendar
     {
       $ec3->done_bigcal_javascript=true;
       $result .= "\t<script type='text/javascript' src='"
-      .    $ec3->myfiles . "/calendar-big.js'></script>\n";
+      .    $ec3->myfiles . "/js/calendar-big.js'></script>\n";
     }
     $result .=
         "\t<script type='text/javascript'><!--\n"
