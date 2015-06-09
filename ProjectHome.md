@@ -1,0 +1,3 @@
+A plugin for Wordpress that permits to add semantic event informations to a post. Specific event category page template. Upcoming events widget and code. Event categories. Import multiple iCal calendars, under specific categories. Multilanguage.
+
+An event is a post with specific data (location and its geodata, start/end date and time, subscription, number of places, payment etc.). The plugin is splitted in indipendent modules.
